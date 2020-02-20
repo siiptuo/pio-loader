@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: ISC
 
 const { execFile } = require("child_process");
-const { extname } = require("path");
+const path = require("path");
+
+const bin = path.resolve(__dirname, "pio");
 
 module.exports = function(source) {
   const callback = this.async();
-  const ext = extname(this.resourcePath).slice(1);
+  const ext = path.extname(this.resourcePath).slice(1);
   const process = execFile(
-    "pio",
+    bin,
     ["--output-format", ext, "--input-format", ext],
     { encoding: "buffer" },
     (error, stdout, stderr) => {

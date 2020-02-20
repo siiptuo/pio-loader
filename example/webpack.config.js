@@ -9,7 +9,7 @@ module.exports = {
         use: [
           "file-loader",
           {
-            loader: "../index.js",
+            loader: "pio-loader",
             options: {}
           }
         ]
