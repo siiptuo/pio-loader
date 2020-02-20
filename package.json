@@ -8,5 +8,9 @@
     "postinstall": "node install.js"
   },
   "author": "Tuomas Siipola",
-  "license": "ISC"
+  "license": "ISC",
+  "files": [
+    "install.js",
+    "LICENSES"
+  ]
 }
