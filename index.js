@@ -12,7 +12,7 @@ module.exports = function(source) {
   const process = execFile(
     bin,
     ["--output-format", ext, "--input-format", ext],
-    { encoding: "buffer" },
+    { encoding: "buffer", maxBuffer: 10 * 1024 * 1024 },
     (error, stdout, stderr) => {
       if (error) {
         callback(error, source);
