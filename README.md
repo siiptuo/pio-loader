@@ -7,17 +7,46 @@ SPDX-License-Identifier: ISC
 
 [Perceptual image optimizer](https://github.com/siiptuo/pio) for webpack.
 
-## Installation
+## Getting started
 
 `pio-loader` is not yet published on npm but you can install it from GitHub by running:
 
 ```sh
-$ npm install siiptuo/pio-loader
+$ npm install --save-dev siiptuo/pio-loader
 ```
 
-## Usage
+Most likely you also want to use [`file-loader`](https://github.com/webpack-contrib/file-loader):
 
-See [`example`](example) directory for full example.
+```sh
+$ npm install --save-dev file-loader
+```
+
+Add `file-loader` and `pio-loader` to your `webpack.config.js`:
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|webp)$/i,
+        use: ["file-loader", "pio-loader"]
+      }
+    ]
+  }
+};
+```
+
+Now imported images automatically optimized:
+
+```js
+import cat from "./cat.jpg";
+
+const img = new Image();
+img.src = cat;
+document.body.appendChild(img);
+```
+
+See [`example`](example) directory for full example which for instance shows how to disable optimization during development.
 
 ## License
 
