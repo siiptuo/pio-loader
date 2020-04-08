@@ -24,10 +24,11 @@ function _request(url, resolve, reject) {
 
 const request = url => new Promise(_request.bind(null, url));
 
-const version = "0.2.0";
-const base = `https://github.com/siiptuo/pio/releases/download/${version}/pio-${version}-`;
+const version = "0.2.1";
+const base = `https://github.com/siiptuo/pio/releases/download/${version}/pio-`;
 const platformUrl = {
-  "linux-x64": `${base}x86_64-unknown-linux-musl`
+  "linux-x64": `${base}x86_64-unknown-linux-musl`,
+  "darwin-x64": `${base}x86_64-apple-darwin`
 };
 const platform = `${process.platform}-${process.arch}`;
 const bin = path.resolve(__dirname, "pio");
