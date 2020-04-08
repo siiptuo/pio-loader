@@ -50,7 +50,6 @@ const res = request(platformUrl[platform])
   .then(res => {
     const file = fs.createWriteStream(bin);
     file.on("close", () => {
-      file.close();
       fs.chmodSync(bin, 0o755);
       if (!testPio()) {
         console.error("running pio failed");
