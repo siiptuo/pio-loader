@@ -36,7 +36,7 @@ module.exports = {
 };
 ```
 
-Now imported images automatically optimized:
+Now imported images are automatically optimized:
 
 ```js
 import cat from "./cat.jpg";
