@@ -8,7 +8,7 @@ const { execFileSync } = require("child_process");
 
 function _request(url, resolve, reject) {
   https
-    .get(url, res => {
+    .get(url, (res) => {
       if (res.statusCode === 200) {
         resolve(res);
       } else if (res.statusCode >= 300 && res.statusCode < 400) {
@@ -17,54 +17,75 @@ function _request(url, resolve, reject) {
         reject(new Error("invalid status: " + res.statusCode));
       }
     })
-    .on("error", err => {
+    .on("error", (err) => {
       reject(err);
     });
 }
 
-const request = url => new Promise(_request.bind(null, url));
+const request = (url) => new Promise(_request.bind(null, url));
 
-const version = "0.2.1";
-const base = `https://github.com/siiptuo/pio/releases/download/${version}/pio-`;
-const platformUrl = {
-  "linux-x64": `${base}x86_64-unknown-linux-musl`,
-  "darwin-x64": `${base}x86_64-apple-darwin`
+const version = "0.4.0";
+const targets = {
+  "linux-x64": ["x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl"],
+  "darwin-x64": ["x86_64-apple-darwin"],
 };
 const platform = `${process.platform}-${process.arch}`;
 const bin = path.resolve(__dirname, "pio");
 
-function testPio() {
-  const output = execFileSync(bin, ["--version"], { encoding: "utf-8" }).trim();
-  return output === `pio ${version}`;
+function downloadAndTest(target) {
+  return request(
+    `https://github.com/siiptuo/pio/releases/download/${version}/pio-${target}`
+  ).then(
+    (res) =>
+      new Promise((resolve, reject) => {
+        const file = fs.createWriteStream(bin);
+        file.on("close", () => {
+          try {
+            fs.chmodSync(bin, 0o755);
+            const output = execFileSync(bin, ["--version"], {
+              encoding: "utf-8",
+            }).trim();
+            if (output !== `pio ${version}`) {
+              throw new Error("wrong version");
+            }
+            resolve();
+          } catch (error) {
+            try {
+              fs.unlinkSync(bin);
+            } catch (error) {}
+            reject(`failed to run pio: ${error.message}`);
+          }
+        });
+        file.on("error", (err) => {
+          try {
+            fs.unlinkSync(bin);
+          } catch (error) {}
+          reject("downloading pio failed: " + err);
+        });
+        res.pipe(file);
+      })
+  );
 }
 
-if (!platformUrl[platform]) {
+async function main(targets) {
+  if (targets.length === 0) {
+    console.error("all binaries failed");
+    process.exit(1);
+  }
+  try {
+    console.log(`downloading ${targets[0]}...`);
+    await downloadAndTest(targets[0]);
+  } catch (error) {
+    console.log(`error: ${error.message}`);
+    return await main(targets.slice(1));
+  }
+}
+
+if (!targets[platform]) {
   console.error(
     `prebuild pio binary is not available for your platform: ${platform}`
   );
   process.exit(1);
 }
 
-console.log("downloading prebuild pio binary...");
-const res = request(platformUrl[platform])
-  .then(res => {
-    const file = fs.createWriteStream(bin);
-    file.on("close", () => {
-      fs.chmodSync(bin, 0o755);
-      if (!testPio()) {
-        console.error("running pio failed");
-        fs.unlinkSync(bin);
-        process.exit(1);
-      }
-    });
-    file.on("error", err => {
-      console.error("downloading pio failed: " + err);
-      fs.unlinkSync(bin);
-      process.exit(1);
-    });
-    res.pipe(file);
-  })
-  .catch(err => {
-    console.error("downloading pio failed: " + err);
-    process.exit(1);
-  });
+main(targets[platform]);
