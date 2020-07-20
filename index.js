@@ -8,7 +8,7 @@ const bin = path.resolve(__dirname, "pio");
 
 module.exports = function (source) {
   const callback = this.async();
-  const ext = path.extname(this.resourcePath).slice(1);
+  const ext = path.extname(this.resourcePath).slice(1).toLowerCase();
   const process = execFile(
     bin,
     ["--output-format", ext === "jpg" ? "jpeg" : ext],
