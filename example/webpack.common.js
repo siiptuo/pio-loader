@@ -7,15 +7,7 @@ module.exports = {
   entry: "./src/index.js",
   plugins: [
     new HtmlWebpackPlugin({
-      title: "pio-loader example"
-    })
+      title: "pio-loader example",
+    }),
   ],
-  module: {
-    rules: [
-      {
-        test: /\.(png|jpe?g|webp)$/i,
-        use: ["file-loader"]
-      }
-    ]
-  }
 };
