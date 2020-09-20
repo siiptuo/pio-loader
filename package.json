@@ -12,5 +12,8 @@
   "files": [
     "install.js",
     "LICENSES"
-  ]
+  ],
+  "dependencies": {
+    "loader-utils": "^2.0.0"
+  }
 }

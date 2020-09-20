@@ -29,10 +29,10 @@ module.exports = {
     rules: [
       {
         test: /\.(png|jpe?g|webp)$/i,
-        use: ["file-loader", "pio-loader"]
-      }
-    ]
-  }
+        use: ["file-loader", "pio-loader"],
+      },
+    ],
+  },
 };
 ```
 
@@ -47,6 +47,41 @@ document.body.appendChild(img);
 ```
 
 See [`example`](example) directory for full example which for instance shows how to disable optimization during development.
+
+## Settings
+
+Set the default quality in `webpack.config.js`:
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|webp)$/i,
+        use: [
+          "file-loader",
+          {
+            loader: "pio-loader",
+            settings: { quality: 75 },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+
+You can override the default quality per import:
+
+```js
+import cat from "./cat.jpg?quality=95";
+```
+
+It's also possible to use different output format:
+
+```js
+import cat from "./cat.jpg?format=webp";
+```
 
 ## License
 

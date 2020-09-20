@@ -2,7 +2,12 @@
 // SPDX-License-Identifier: CC0-1.0
 
 import cat from "./cat.jpg";
+import webp from "./cat.jpg?format=webp&quality=50";
 
-const img = new Image();
-img.src = cat;
-document.body.appendChild(img);
+const img1 = new Image();
+img1.src = cat;
+document.body.appendChild(img1);
+
+const img2 = new Image();
+img2.src = webp;
+document.body.appendChild(img2);
