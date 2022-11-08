@@ -14,6 +14,6 @@
     "LICENSES"
   ],
   "dependencies": {
-    "loader-utils": "^2.0.0"
+    "loader-utils": "^2.0.3"
   }
 }
